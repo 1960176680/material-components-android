@@ -18,12 +18,9 @@ package io.material.catalog.transition.hero;
 
 import io.material.catalog.R;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.os.Parcelable;
 import androidx.fragment.app.Fragment;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -32,15 +29,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 import com.google.android.material.transition.Hold;
+import com.google.android.material.transition.MaterialContainerTransform;
 import com.google.android.material.transition.MaterialFadeThrough;
 import com.google.android.material.transition.MaterialSharedAxis;
 import io.material.catalog.transition.hero.AlbumsAdapter.AlbumAdapterListener;
@@ -50,7 +50,6 @@ import java.util.Collections;
 import java.util.List;
 
 /** A Fragment that hosts a toolbar and a child fragment with a list of music data. */
-@TargetApi(VERSION_CODES.LOLLIPOP)
 public class TransitionMusicLibraryDemoFragment extends Fragment
     implements AlbumAdapterListener, OnMenuItemClickListener {
 
@@ -58,17 +57,11 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
 
   private FrameLayout listContainer;
 
+  private static final int ALBUM_RECYCLER_VIEW_ID = ViewCompat.generateViewId();
+  private Parcelable listState = null;
+
   private boolean listTypeGrid = true;
   private boolean listSorted = true;
-
-  @Override
-  public void onCreate(@Nullable Bundle bundle) {
-    super.onCreate(bundle);
-    // Use a Hold transition to keep this fragment visible beneath the MaterialContainerTransform
-    // that transitions to the album details screen. Without a Hold, this fragment would disappear
-    // as soon its container is replaced with a new Fragment.
-    setExitTransition(new Hold());
-  }
 
   @Nullable
   @Override
@@ -85,9 +78,17 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
     Toolbar toolbar = view.findViewById(R.id.toolbar);
     listContainer = view.findViewById(R.id.list_container);
     toolbar.setOnMenuItemClickListener(this);
-    MaterialSharedAxis sharedAxis =
-        MaterialSharedAxis.create(MaterialSharedAxis.Z, true);
+    MaterialSharedAxis sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Z, true);
     setList(listTypeGrid, listSorted, sharedAxis);
+  }
+
+  @Override
+  public void onDestroyView() {
+    RecyclerView rv = requireView().findViewById(ALBUM_RECYCLER_VIEW_ID);
+    if (rv != null) {
+      listState = rv.getLayoutManager().onSaveInstanceState();
+    }
+    super.onDestroyView();
   }
 
   @Override
@@ -95,7 +96,21 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
     TransitionMusicAlbumDemoFragment fragment =
         TransitionMusicAlbumDemoFragment.newInstance(album.id);
 
-    getFragmentManager()
+    MaterialContainerTransform transform =
+        new MaterialContainerTransform(requireContext(), /* entering= */ true);
+    fragment.setSharedElementEnterTransition(transform);
+
+    // Use a Hold transition to keep this fragment visible beneath the MaterialContainerTransform
+    // that transitions to the album details screen. Without a Hold, this fragment would disappear
+    // as soon its container is replaced with a new Fragment.
+    Hold hold = new Hold();
+    // Add root view as target for the Hold so that the entire view hierarchy is held in place as
+    // one instead of each child view individually. Helps keep shadows during the transition.
+    hold.addTarget(R.id.container);
+    hold.setDuration(transform.getDuration());
+    setExitTransition(hold);
+
+    getParentFragmentManager()
         .beginTransaction()
         .addSharedElement(view, ViewCompat.getTransitionName(view))
         .replace(R.id.fragment_container, fragment, TransitionMusicAlbumDemoFragment.TAG)
@@ -108,15 +123,14 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
     int itemId = menuItem.getItemId();
     if (itemId == R.id.item_list_type) {
       // Use a fade through transition to swap between list item view types.
-      MaterialFadeThrough fadeThrough = MaterialFadeThrough.create();
+      MaterialFadeThrough fadeThrough = new MaterialFadeThrough();
       setList(!listTypeGrid, listSorted, fadeThrough);
       return true;
     }
 
     // Use a shared axis Y transition to sort the list, showing a spacial relationship between
     // the outgoing and incoming view.
-    MaterialSharedAxis sharedAxis =
-        MaterialSharedAxis.create(MaterialSharedAxis.Y, true);
+    MaterialSharedAxis sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
     setList(listTypeGrid, !listSorted, sharedAxis);
     return true;
   }
@@ -131,7 +145,16 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
 
     // Use a Transition to animate the removal and addition of the RecyclerViews.
     RecyclerView recyclerView = createRecyclerView(listTypeGrid);
-    transition.addTarget(RecyclerView.class);
+    // Restore the RecyclerView's scroll position if available
+    if (listState != null) {
+      recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+      listState = null;
+    }
+    transition.addTarget(recyclerView);
+    View currentRecyclerView = listContainer.getChildAt(0);
+    if (currentRecyclerView != null) {
+      transition.addTarget(currentRecyclerView);
+    }
     TransitionManager.beginDelayedTransition(listContainer, transition);
 
     AlbumsAdapter adapter = new AlbumsAdapter(this, listTypeGrid);
@@ -149,6 +172,7 @@ public class TransitionMusicLibraryDemoFragment extends Fragment
   private RecyclerView createRecyclerView(boolean listTypeGrid) {
     Context context = requireContext();
     RecyclerView recyclerView = new RecyclerView(context);
+    recyclerView.setId(ALBUM_RECYCLER_VIEW_ID);
     recyclerView.setLayoutParams(
         new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     int verticalPadding =

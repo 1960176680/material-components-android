@@ -37,24 +37,10 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.AnimatorRes;
-import androidx.annotation.BoolRes;
-import androidx.annotation.CallSuper;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DimenRes;
-import androidx.annotation.Dimension;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.Px;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.StringRes;
-import androidx.annotation.StyleRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionItemInfoCompat;
-import androidx.customview.widget.ExploreByTouchHelper;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -70,6 +56,20 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.annotation.AnimatorRes;
+import androidx.annotation.BoolRes;
+import androidx.annotation.CallSuper;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.customview.widget.ExploreByTouchHelper;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.chip.ChipDrawable.Delegate;
 import com.google.android.material.internal.ThemeEnforcement;
@@ -229,7 +229,6 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
     setText(drawable.getText());
     setEllipsize(drawable.getEllipsize());
 
-    setIncludeFontPadding(false);
     updateTextPaintDrawState();
 
     // Chip text should not extend to more than 1 line.
@@ -968,7 +967,7 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
   private RectF getCloseIconTouchBounds() {
     rectF.setEmpty();
 
-    if (hasCloseIcon()) {
+    if (hasCloseIcon() && onCloseIconClickListener != null) {
       // noinspection ConstantConditions
       chipDrawable.getCloseIconTouchBounds(rectF);
     }
@@ -1540,6 +1539,8 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
 
   /**
    * Returns this chip's icon size.
+   * If a non-positive value is set, the icon drawable's width and height (up to 24dp) will be used
+   * instead.
    *
    * @see #setChipIconSize(float)
    * @attr ref com.google.android.material.R.styleable#Chip_chipIconTint
@@ -1550,6 +1551,8 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
 
   /**
    * Sets this chip icon's size using a resource id.
+   * If the value is zero or negative, the icon drawable's width and height (up to 24dp) will be
+   * used instead.
    *
    * @param id The resource id of this chip's icon size.
    * @attr ref com.google.android.material.R.styleable#Chip_chipIconSize
@@ -1562,6 +1565,8 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
 
   /**
    * Sets this chip icon's size.
+   * If the value is zero or negative, the icon drawable's width and height (up to 24dp) will be
+   * used instead.
    *
    * @param chipIconSize This chip's icon size.
    * @attr ref com.google.android.material.R.styleable#Chip_chipIconSize
@@ -1753,7 +1758,7 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
   /**
    * Returns whether this chip is checkable.
    *
-   * @see #setIsCheckable(boolean)
+   * @see #setCheckable(boolean)
    * @attr ref com.google.android.material.R.styleable#Chip_android_checkable
    */
   public boolean isCheckable() {
@@ -1910,7 +1915,7 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
   /**
    * Returns this chip's show motion spec.
    *
-   * @see #setShowMotionSpec(Drawable)
+   * @see #setShowMotionSpec(MotionSpec)
    * @attr ref com.google.android.material.R.styleable#Chip_showMotionSpec
    */
   @Nullable
@@ -1945,7 +1950,7 @@ public class Chip extends AppCompatCheckBox implements Delegate, Shapeable {
   /**
    * Returns this chip's hide motion spec.
    *
-   * @see #setHideMotionSpec(Drawable)
+   * @see #setHideMotionSpec(MotionSpec)
    * @attr ref com.google.android.material.R.styleable#Chip_hideMotionSpec
    */
   @Nullable

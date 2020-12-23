@@ -16,56 +16,26 @@
 
 package com.google.android.material.transition;
 
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.animation.AnimationUtils;
-
 /**
- * A {@link android.transition.Visibility} transition that is composed of a fade and scale of
+ * A {@link androidx.transition.Visibility} transition that is composed of a fade and scale of
  * incoming content and a simple fade of outgoing content.
  */
-@RequiresApi(VERSION_CODES.LOLLIPOP)
-public class MaterialFade extends MaterialVisibility<FadeProvider> {
+public final class MaterialFade extends MaterialVisibility<FadeProvider> {
 
-  private static final long DEFAULT_DURATION_ENTER = 150;
-  private static final long DEFAULT_DURATION_RETURN = 75;
   private static final float DEFAULT_START_SCALE = 0.8f;
   private static final float DEFAULT_FADE_END_THRESHOLD_ENTER = 0.3f;
 
-  private boolean entering;
-
-  @NonNull
-  public static MaterialFade create() {
-    return create(true);
+  public MaterialFade() {
+    super(createPrimaryAnimatorProvider(), createSecondaryAnimatorProvider());
   }
 
-  @NonNull
-  public static MaterialFade create(boolean entering) {
-    return new MaterialFade(entering);
-  }
-
-  private MaterialFade(boolean entering) {
-    this.entering = entering;
-    setDuration(entering ? DEFAULT_DURATION_ENTER : DEFAULT_DURATION_RETURN);
-    setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
-    initialize();
-  }
-
-  @NonNull
-  @Override
-  FadeProvider getDefaultPrimaryAnimatorProvider() {
+  private static FadeProvider createPrimaryAnimatorProvider() {
     FadeProvider fadeProvider = new FadeProvider();
-    if (entering) {
-      fadeProvider.setIncomingEndThreshold(DEFAULT_FADE_END_THRESHOLD_ENTER);
-    }
+    fadeProvider.setIncomingEndThreshold(DEFAULT_FADE_END_THRESHOLD_ENTER);
     return fadeProvider;
   }
 
-  @Nullable
-  @Override
-  VisibilityAnimatorProvider getDefaultSecondaryAnimatorProvider() {
+  private static VisibilityAnimatorProvider createSecondaryAnimatorProvider() {
     ScaleProvider scaleProvider = new ScaleProvider();
     scaleProvider.setScaleOnDisappear(false);
     scaleProvider.setIncomingStartScale(DEFAULT_START_SCALE);

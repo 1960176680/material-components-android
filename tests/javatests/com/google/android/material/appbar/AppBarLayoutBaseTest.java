@@ -33,11 +33,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.SystemClock;
-import androidx.annotation.CallSuper;
-import androidx.annotation.IdRes;
-import androidx.annotation.IntRange;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,8 +40,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.CallSuper;
+import androidx.annotation.IdRes;
+import androidx.annotation.IntRange;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.StringRes;
 import com.google.android.material.internal.BaseDynamicCoordinatorLayoutTest;
-import com.google.android.material.resources.TextAppearanceConfig;
 import com.google.android.material.testapp.R;
 import com.google.android.material.testutils.AccessibilityUtils;
 import com.google.android.material.testutils.Shakespeare;
@@ -79,7 +78,6 @@ public abstract class AppBarLayoutBaseTest extends BaseDynamicCoordinatorLayoutT
   @CallSuper
   protected void configureContent(@LayoutRes final int layoutResId, @StringRes final int titleResId)
       throws Throwable {
-    TextAppearanceConfig.setShouldLoadFontSynchronously(true);
     onView(withId(R.id.coordinator_stub)).perform(inflateViewStub(layoutResId));
 
     mAppBar = mCoordinatorLayout.findViewById(R.id.app_bar);

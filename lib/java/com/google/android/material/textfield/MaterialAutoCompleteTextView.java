@@ -25,8 +25,6 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.ListPopupWindow;
 import android.text.InputType;
@@ -35,23 +33,25 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Filterable;
 import android.widget.ListAdapter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ThemeEnforcement;
 
 /**
  * A special sub-class of {@link android.widget.AutoCompleteTextView} that is auto-inflated so that
- * non-editable auto-complete text fields (e.g., for an Exposed Dropdown Menu) are accessible when
- * being interacted through a screen reader.
+ * auto-complete text fields (e.g., for an Exposed Dropdown Menu) are accessible when being
+ * interacted through a screen reader.
  *
  * <p>The {@link ListPopupWindow} of the {@link android.widget.AutoCompleteTextView} is not modal,
  * so it does not grab accessibility focus. The {@link MaterialAutoCompleteTextView} changes that
- * by having a modal {@link ListPopupWindow} that is displayed instead of the non-modal one when the
- * {@link MaterialAutoCompleteTextView} is not editable, so that the first item of the popup is
- * automatically focused. This simulates the behavior of the {@link android.widget.Spinner}.
+ * by having a modal {@link ListPopupWindow} that is displayed instead of the non-modal one, so that
+ * the first item of the popup is automatically focused. This simulates the behavior of the
+ * {@link android.widget.Spinner}.
  */
 public class MaterialAutoCompleteTextView extends AppCompatAutoCompleteTextView {
 
@@ -132,9 +132,7 @@ public class MaterialAutoCompleteTextView extends AppCompatAutoCompleteTextView 
 
   @Override
   public void showDropDown() {
-    if (getInputType() == EditorInfo.TYPE_NULL
-        && accessibilityManager != null
-        && accessibilityManager.isTouchExplorationEnabled()) {
+    if (accessibilityManager != null && accessibilityManager.isTouchExplorationEnabled()) {
       modalListPopup.show();
     } else {
       super.showDropDown();
@@ -145,6 +143,22 @@ public class MaterialAutoCompleteTextView extends AppCompatAutoCompleteTextView 
   public <T extends ListAdapter & Filterable> void setAdapter(@Nullable T adapter) {
     super.setAdapter(adapter);
     modalListPopup.setAdapter(getAdapter());
+  }
+
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+
+    // Meizu devices expect TextView#mHintLayout to be non-null if TextView#getHint() is non-null.
+    // In order to avoid crashing, we force the creation of the layout by setting an empty non-null
+    // hint.
+    TextInputLayout layout = findTextInputLayoutAncestor();
+    if (layout != null
+        && layout.isProvidingHint()
+        && super.getHint() == null
+        && ManufacturerUtils.isMeizuDevice()) {
+      setHint("");
+    }
   }
 
   @Nullable

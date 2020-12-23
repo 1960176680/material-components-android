@@ -18,17 +18,21 @@ package io.material.catalog.progressindicator;
 import io.material.catalog.R;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import io.material.catalog.feature.DemoFragment;
 
-/** This is the fragment to briefly demo different types of {@link ProgressIndicator}. */
+/**
+ * This is the fragment to demo simple use cases of {@link LinearProgressIndicator} and {@link
+ * CircularProgressIndicator}.
+ */
 public class ProgressIndicatorMainDemoFragment extends DemoFragment {
   @Override
   @NonNull
@@ -46,8 +50,8 @@ public class ProgressIndicatorMainDemoFragment extends DemoFragment {
   }
 
   public void initialize(@NonNull View view) {
-    ProgressIndicator linearDeterminate = view.findViewById(R.id.linear_determinate);
-    ProgressIndicator circularDeterminate = view.findViewById(R.id.circular_determinate);
+    LinearProgressIndicator linearDeterminate = view.findViewById(R.id.linear_determinate);
+    CircularProgressIndicator circularDeterminate = view.findViewById(R.id.circular_determinate);
     EditText progressInput = view.findViewById(R.id.progress_input);
     Button updateButton = view.findViewById(R.id.update_button);
 

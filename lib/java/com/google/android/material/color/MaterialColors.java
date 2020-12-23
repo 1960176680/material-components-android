@@ -15,16 +15,18 @@
  */
 package com.google.android.material.color;
 
+import static android.graphics.Color.TRANSPARENT;
+
 import android.content.Context;
 import android.graphics.Color;
+import androidx.core.graphics.ColorUtils;
+import android.util.TypedValue;
+import android.view.View;
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.core.graphics.ColorUtils;
-import android.util.TypedValue;
-import android.view.View;
 import com.google.android.material.resources.MaterialAttributes;
 
 /**
@@ -152,5 +154,10 @@ public class MaterialColors {
       @ColorInt int originalARGB, @IntRange(from = 0, to = 255) int alpha) {
     alpha = Color.alpha(originalARGB) * alpha / 255;
     return ColorUtils.setAlphaComponent(originalARGB, alpha);
+  }
+
+  /** Determines if a color should be considered light or dark. */
+  public static boolean isColorLight(@ColorInt int color) {
+    return color != TRANSPARENT && ColorUtils.calculateLuminance(color) > 0.5;
   }
 }

@@ -12,19 +12,24 @@ path: /catalog/cards/
 [Cards](https://material.io/components/cards/) contain content and actions about
 a single subject.
 
-![Elevated card with a secondary title and Action 1 and Action 2 buttons in
-purple](assets/cards/cards_basic.png)
+!["Cards with text, numbers, graph, and a chart"](assets/cards/cards_hero.png)
+
+**Contents**
+
+*   [Using cards](#using-cards)
+*   [Card](#card)
+*   [Theming](#theming-cards)
 
 ## Using cards
 
 Before you can use a Material card, you need to add a dependency to the Material
 Components for Android library. For more information, go to the
-[Getting started](/material-components/material-components-android/blob/master/docs/getting-started.md)
+[Getting started](https://github.com/material-components/material-components-android/tree/master/docs/getting-started.md)
 page.
 
 Cards support [checking](#making-a-card-checkable) and
-[dragging](#making-a-card-draggable), but those behaviors are not implemented
-by default.
+[dragging](#making-a-card-draggable), but those behaviors are not implemented by
+default.
 
 ### Making cards accessible
 
@@ -37,140 +42,7 @@ on it, so that the behavior can be accessible via screen readers such as
 TalkBack. See the [draggable card section](#making-a-card-draggable) section
 below for more info.
 
-## Card
-
-On mobile, a [card’s](https://material.io/components/cards/#specs) default
-elevation is `1dp`, with a raised dragged elevation of `8dp`.
-
-### Card examples
-
-API and source code:
-
-*   `MaterialCardView`
-    *   [Class definition](https://developer.android.com/reference/com/google/android/material/card/MaterialCardView)
-    *   [Class source](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/card/MaterialCardView.java)
-
-_**Note:** You don't need to specify a style tag as long as you are using a
-Material Components Theme. If not, set the style to
-`Widget.MaterialComponents.CardView`._
-
-#### Elevated card
-
-The following example shows an elevated card.
-
-!["Elevated card with a title, a secondary title, text, and Action 1 and Action
-2 buttons in purple"](assets/cards/cards_elevated.png)
-
-```xml
-<com.google.android.material.card.MaterialCardView
-    android:id="@+id/card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Media -->
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="194dp"
-            app:srcCompat="@drawable/media"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/content_description_media"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Title, secondary and supporting text -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/secondary_text"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/supporting_text"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary"
-                />
-
-        </LinearLayout>
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal">
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="@string/action_1"
-                style="?attr/borderlessButtonStyle"
-                />
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/action_2"
-                style="?attr/borderlessButtonStyle"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
-```
-
-#### Outlined card
-
-The following example shows an outlined card.
-
-!["Outlined card with a title, a secondary title, text, and Action 1 and Action
-2 buttons in purple"](assets/cards/cards_outlined.png)
-
-In the layout:
-
-```xml
-<com.google.android.material.card.MaterialCardView
-    ...
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/stroke_color"
-    app:cardElevation="0dp">
-
-    ...
-
-</com.google.android.material.card.MaterialCardView>
-```
-
-In the stroke color (`stroke_color.xml`):
-
-```xml
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?attr/colorPrimary" android:state_checked="true"/>
-    <item android:alpha="0.12" android:color="?attr/colorOnSurface" android:state_checked="false"/>
-</selector>
-```
-
-#### Making a card checkable
+### Making a card checkable
 
 ![Elevated card with a checked button and a light purple overlay; secondary
 title and Action 1 and Action 2 buttons](assets/cards/cards_checked.png)
@@ -202,7 +74,7 @@ card.setOnLongClickListener {
 }
 ```
 
-#### Making a card draggable
+### Making a card draggable
 
 ![Elevated card with a light grey overlay; secondary title and Action 1 and
 Action 2 buttons](assets/cards/cards_dragged.png)
@@ -318,6 +190,142 @@ _**Note:** Cards also support a swipe-to-dismiss behavior through the use of
 You can see an example
 [here](https://github.com/material-components/material-components-android/tree/master/catalog/java/io/material/catalog/card/CardSwipeDismissFragment.java)._
 
+## Card
+
+On mobile, a [card’s](https://material.io/components/cards/#specs) default
+elevation is `1dp`, with a raised dragged elevation of `8dp`.
+
+![Elevated card with a secondary title and Action 1 and Action 2 buttons in
+purple](assets/cards/cards_basic.png)
+
+### Card examples
+
+API and source code:
+
+*   `MaterialCardView`
+    *   [Class definition](https://developer.android.com/reference/com/google/android/material/card/MaterialCardView)
+    *   [Class source](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/card/MaterialCardView.java)
+
+_**Note:** You don't need to specify a style tag as long as you are using a
+Material Components Theme. If not, set the style to
+`Widget.MaterialComponents.CardView`._
+
+#### Elevated card
+
+The following example shows an elevated card.
+
+!["Elevated card with photo, a title, a secondary title, text, and Action 1 and
+Action 2 buttons in purple"](assets/cards/cards_elevated.png)
+
+```xml
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Media -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="194dp"
+            app:srcCompat="@drawable/media"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/content_description_media"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title, secondary and supporting text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/secondary_text"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/supporting_text"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
+                />
+
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/action_1"
+                style="?attr/borderlessButtonStyle"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_2"
+                style="?attr/borderlessButtonStyle"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+```
+
+#### Outlined card
+
+The following example shows an outlined card.
+
+!["Outlined card with a photo, title, a secondary title, text, and Action 1 and
+Action 2 buttons in purple"](assets/cards/cards_outlined.png)
+
+In the layout:
+
+```xml
+<com.google.android.material.card.MaterialCardView
+    ...
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/stroke_color"
+    app:cardElevation="0dp">
+
+    ...
+
+</com.google.android.material.card.MaterialCardView>
+```
+
+In the stroke color (`stroke_color.xml`):
+
+```xml
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/colorPrimary" android:state_checked="true"/>
+    <item android:alpha="0.12" android:color="?attr/colorOnSurface" android:state_checked="false"/>
+</selector>
+```
+
 ### Anatomy and key properties
 
 A card has a container and an optional thumbnail, header text, secondary text,
@@ -351,20 +359,24 @@ shown in the [card examples](#card-examples) section._
 **Elevation**        | `app:cardElevation`       | `setCardElevation`<br/>`setCardMaxElevation`                        | `1dp`
 **Ripple color**     | `app:rippleColor`         | `setRippleColor`<br/>`setRippleColorResource`<br/>`getRippleColor`  | `?attr/colorOnSurface` at 20% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/card/res/color/mtrl_card_view_ripple.xml))
 
-_**Note** We recommend that cards on mobile have `8dp` margins.
-`android:layout_margin` needs to be set directly on a `MaterialCardView` in its
-layout and not included as part of a style._
+_**Note:** We recommend that cards on mobile have `8dp` margins.
+`android:layout_margin` will [**NOT**](https://stackoverflow.com/a/13365288)
+work in default styles (eg. `materialCardViewStyle`) so either set this attr
+directly on a `MaterialCardView` in the layout or add it to a style that is
+applied in the layout with `style="@style/...`._
 
-_**Note** Without an `app:strokeColor`, the card will not render a stroked
+_**Note:** Without an `app:strokeColor`, the card will not render a stroked
 border, regardless of the `app:strokeWidth` value._
 
 #### Checked icon attributes
 
-&nbsp;        | Attribute           | Related method(s)                                                  | Default value
-------------- | ------------------- | ------------------------------------------------------------------ | -------------
-**Icon**      | `checkedIcon`       | `setCheckedIcon`<br/>`setCheckedIconResource`<br/>`getCheckedIcon` | [`@drawable/ic_mtrl_checked_circle.xml`](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/resources/res/drawable/ic_mtrl_checked_circle.xml)
-**Color**     | `checkedIconTint`   | `setCheckedIconTint`<br/>`getCheckedIconTint`                      | `?attr/colorPrimary`
-**Checkable** | `android:checkable` | `setCheckable`<br/>`isCheckable`                                   | `false`
+&nbsp;        | Attribute           | Related method(s)                                                                    | Default value
+------------- | ------------------- | ------------------------------------------------------------------------------------ | -------------
+**Icon**      | `checkedIcon`       | `setCheckedIcon`<br/>`setCheckedIconResource`<br/>`getCheckedIcon`                   | [`@drawable/ic_mtrl_checked_circle.xml`](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/resources/res/drawable/ic_mtrl_checked_circle.xml)
+**Color**     | `checkedIconTint`   | `setCheckedIconTint`<br/>`getCheckedIconTint`                                        | `?attr/colorPrimary`
+**Checkable** | `android:checkable` | `setCheckable`<br/>`isCheckable`                                                     | `false`
+**Size**      | `checkedIconSize`   | `setCheckedIconSize`<br/>`setCheckedIconSizeResource`<br/>`getCheckedIconSize`       | `24dp`
+**Margin**    | `checkedIconMargin` | `setCheckedIconMargin`<br/>`setCheckedIconMarginResource`<br/>`getCheckedIconMargin` | `8dp`
 
 #### States
 
@@ -405,7 +417,8 @@ API and source code
 
 The following example shows a card with Material Theming.
 
-![Card theming example in Shrine theme](assets/cards/cards_theming.png)
+![Card with Shrine theme with photo, title, secondary title, text and Action 1
+and 2 buttons in black](assets/cards/cards_theming.png)
 
 #### Implementing card theming
 

@@ -18,23 +18,23 @@ package io.material.catalog.transition;
 
 import io.material.catalog.R;
 
-import android.annotation.TargetApi;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.TransitionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.transition.MaterialFade;
 import io.material.catalog.feature.DemoFragment;
 
 /** A fragment that displays the Fade Transition demo for the Catalog app. */
-@TargetApi(VERSION_CODES.LOLLIPOP)
 public class TransitionFadeDemoFragment extends DemoFragment {
+
+  private static final long DURATION_ENTER = 150;
+  private static final long DURATION_RETURN = 84;
 
   private Button fadeButton;
   private FloatingActionButton fadeFab;
@@ -57,7 +57,8 @@ public class TransitionFadeDemoFragment extends DemoFragment {
     ViewGroup sceneRoot = (ViewGroup) requireView();
 
     boolean entering = fadeFab.getVisibility() == View.GONE;
-    MaterialFade materialFade = MaterialFade.create(entering);
+    MaterialFade materialFade = new MaterialFade();
+    materialFade.setDuration(entering ? DURATION_ENTER : DURATION_RETURN);
     TransitionManager.beginDelayedTransition(sceneRoot, materialFade);
     fadeFab.setVisibility(entering ? View.VISIBLE : View.GONE);
     fadeButton.setText(

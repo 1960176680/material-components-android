@@ -47,7 +47,7 @@ public class CalendarConstraintsTest {
 
   @Test
   public void clampMonth_when_InsideBounds() {
-    Month today = Month.today();
+    Month today = Month.current();
     Month yearBefore = today.monthsLater(-12);
     Month yearAfter = today.monthsLater(12);
 
@@ -63,7 +63,7 @@ public class CalendarConstraintsTest {
 
   @Test
   public void clampMonth_when_beforeLowerBound() {
-    Month today = Month.today();
+    Month today = Month.current();
     Month yearBefore = today.monthsLater(-12);
     Month yearAfter = today.monthsLater(12);
 
@@ -78,7 +78,7 @@ public class CalendarConstraintsTest {
 
   @Test
   public void clampMonth_when_AfterUpperBound() {
-    Month today = Month.today();
+    Month today = Month.current();
     Month yearBefore = today.monthsLater(-12);
     Month yearAfter = today.monthsLater(12);
 
@@ -92,20 +92,11 @@ public class CalendarConstraintsTest {
   }
 
   @Test
-  public void currentDefaultsToTodayIfWithinBounds() {
-    Month today = Month.today();
-    long start = today.monthsLater(-1).timeInMillis;
-    long end = today.monthsLater(1).timeInMillis;
-    CalendarConstraints calendarConstraints =
-        new CalendarConstraints.Builder().setStart(start).setEnd(end).build();
-    assertEquals(today, calendarConstraints.getOpenAt());
-  }
-
-  @Test
   public void currentDefaultsToStartIfTodayIsInvalid() {
     CalendarConstraints calendarConstraints =
         new CalendarConstraints.Builder().setStart(FEB_2016).setEnd(APRIL_2016).build();
-    assertEquals(FEB_2016, calendarConstraints.getOpenAt().timeInMillis);
+
+    assertEquals(null, calendarConstraints.getOpenAt());
   }
 
   @Test

@@ -33,6 +33,7 @@ import io.material.catalog.fab.FabFragment;
 import io.material.catalog.font.FontFragment;
 import io.material.catalog.imageview.ShapeableImageViewFragment;
 import io.material.catalog.menu.MenuFragment;
+import io.material.catalog.progressindicator.ProgressIndicatorFragment;
 import io.material.catalog.radiobutton.RadioButtonFragment;
 import io.material.catalog.shapetheming.ShapeThemingFragment;
 import io.material.catalog.slider.SliderFragment;
@@ -41,6 +42,7 @@ import io.material.catalog.tabs.TabsFragment;
 import io.material.catalog.textfield.TextFieldFragment;
 import io.material.catalog.themeswitcher.ThemeSwitcherDialogFragment;
 import io.material.catalog.themeswitcher.ThemeSwitcherResourceProvider;
+import io.material.catalog.timepicker.TimePickerDemoLandingFragment;
 import io.material.catalog.topappbar.TopAppBarFragment;
 import io.material.catalog.transition.TransitionFragment;
 
@@ -54,12 +56,13 @@ import io.material.catalog.transition.TransitionFragment;
       CardFragment.Module.class,
       CheckBoxFragment.Module.class,
       ChipFragment.Module.class,
+      DatePickerDemoLandingFragment.Module.class,
       DialogDemoLandingFragment.Module.class,
       ElevationFragment.Module.class,
       FabFragment.Module.class,
       FontFragment.Module.class,
       MenuFragment.Module.class,
-      DatePickerDemoLandingFragment.Module.class,
+      ProgressIndicatorFragment.Module.class,
       RadioButtonFragment.Module.class,
       ShapeableImageViewFragment.Module.class,
       ShapeThemingFragment.Module.class,
@@ -67,6 +70,7 @@ import io.material.catalog.transition.TransitionFragment;
       SwitchFragment.Module.class,
       TabsFragment.Module.class,
       TextFieldFragment.Module.class,
+      TimePickerDemoLandingFragment.Module.class,
       TopAppBarFragment.Module.class,
       TransitionFragment.Module.class
     })

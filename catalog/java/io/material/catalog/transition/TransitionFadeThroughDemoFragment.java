@@ -18,24 +18,21 @@ package io.material.catalog.transition;
 
 import io.material.catalog.R;
 
-import android.annotation.TargetApi;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.transition.MaterialFadeThrough;
 import io.material.catalog.feature.DemoFragment;
 
 /** A fragment that displays the Fade Through Transition demo for the Catalog app. */
-@TargetApi(VERSION_CODES.LOLLIPOP)
 public class TransitionFadeThroughDemoFragment extends DemoFragment {
 
   private static final SparseIntArray LAYOUT_RES_MAP = new SparseIntArray();
@@ -83,7 +80,7 @@ public class TransitionFadeThroughDemoFragment extends DemoFragment {
   }
 
   private MaterialFadeThrough createTransition(){
-    MaterialFadeThrough fadeThrough = MaterialFadeThrough.create();
+    MaterialFadeThrough fadeThrough = new MaterialFadeThrough();
 
     // Add targets for this transition to explicitly run transitions only on these views. Without
     // targeting, a MaterialFadeThrough would be run for every view in the Fragment's layout.

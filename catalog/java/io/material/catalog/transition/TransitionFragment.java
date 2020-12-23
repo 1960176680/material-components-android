@@ -21,7 +21,6 @@ import io.material.catalog.R;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
@@ -32,21 +31,12 @@ import io.material.catalog.feature.Demo;
 import io.material.catalog.feature.DemoLandingFragment;
 import io.material.catalog.feature.FeatureDemo;
 import io.material.catalog.transition.hero.TransitionMusicDemoActivity;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /** A landing fragment that links to Transition demos for the Catalog app. */
 public class TransitionFragment extends DemoLandingFragment {
-
-  @Override
-  public boolean isRestricted() {
-    return VERSION.SDK_INT < VERSION_CODES.LOLLIPOP;
-  }
-
-  @Override
-  public int getRestrictedMessageId() {
-    return R.string.cat_transition_restricted_message;
-  }
 
   @Override
   public int getTitleResId() {
@@ -70,52 +60,69 @@ public class TransitionFragment extends DemoLandingFragment {
 
   @Override
   public List<Demo> getAdditionalDemos() {
-    return Arrays.asList(
-        new Demo(R.string.cat_transition_container_transform_activity_title) {
-          @Override
-          public Intent createActivityIntent() {
-            return getTransitionContainerTransformStartDemoActivity();
-          }
-        },
-        new Demo(R.string.cat_transition_container_transform_fragment_title) {
-          @Override
-          public Fragment createFragment() {
-            return getTransitionContainerTransformDemoFragment();
-          }
-        },
-        new Demo(R.string.cat_transition_container_transform_view_title) {
-          @Override
-          public Fragment createFragment() {
-            return new TransitionContainerTransformViewDemoFragment();
-          }
-        },
-        new Demo(R.string.cat_transition_shared_axis_title) {
-          @Override
-          public Fragment createFragment() {
-            return new TransitionSharedAxisDemoFragment();
-          }
-        },
-        new Demo(R.string.cat_transition_fade_through_title) {
-          @Override
-          public Fragment createFragment() {
-            return new TransitionFadeThroughDemoFragment();
-          }
-        },
-        new Demo(R.string.cat_transition_fade_title) {
-          @Override
-          public Fragment createFragment() {
-            return new TransitionFadeDemoFragment();
-          }
-        });
-  }
+    List<Demo> demos = new ArrayList<>();
+    boolean shouldAddPlatformDemos = VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP;
+    if (shouldAddPlatformDemos) {
+      demos.add(
+          new Demo(R.string.cat_transition_container_transform_activity_title) {
+            @Override
+            public Intent createActivityIntent() {
+              return new Intent(getContext(), TransitionContainerTransformStartDemoActivity.class);
+            }
+          });
+    }
+    demos.addAll(
+        Arrays.asList(
+            new Demo(R.string.cat_transition_container_transform_fragment_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionContainerTransformDemoFragment();
+              }
+            },
+            new Demo(R.string.cat_transition_container_transform_view_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionContainerTransformViewDemoFragment();
+              }
+            }));
 
-  @NonNull
-  protected Intent getTransitionContainerTransformStartDemoActivity() {
-    return new Intent(getContext(), TransitionContainerTransformStartDemoActivity.class);
-  }
-
-  protected Fragment getTransitionContainerTransformDemoFragment() {
-    return new TransitionContainerTransformDemoFragment();
+    if (shouldAddPlatformDemos) {
+      demos.add(
+          new Demo(R.string.cat_transition_shared_axis_activity_title) {
+            @Override
+            public Intent createActivityIntent() {
+              return new Intent(getContext(), TransitionSharedAxisStartDemoActivity.class);
+            }
+          }
+      );
+    }
+    demos.addAll(
+        Arrays.asList(
+            new Demo(R.string.cat_transition_shared_axis_fragment_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionSharedAxisDemoFragment();
+              }
+            },
+            new Demo(R.string.cat_transition_shared_axis_view_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionSharedAxisViewDemoFragment();
+              }
+            },
+            new Demo(R.string.cat_transition_fade_through_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionFadeThroughDemoFragment();
+              }
+            },
+            new Demo(R.string.cat_transition_fade_title) {
+              @Override
+              public Fragment createFragment() {
+                return new TransitionFadeDemoFragment();
+              }
+            }));
+    return demos;
   }
 
   /** The Dagger module for {@link TransitionFragment} dependencies. */

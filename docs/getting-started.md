@@ -40,7 +40,9 @@ To use it:
       }
     ```
 
-Visit [Google's Maven Repository](http://maven.google.com) or
+Visit
+[Google's Maven Repository](https://maven.google.com/web/index.html#com.google.android.material:material)
+or
 [MVN Repository](https://mvnrepository.com/artifact/com.google.android.material/material)
 to find the latest version of the library.
 
@@ -60,13 +62,11 @@ the `com.android.support:design:28.0.0` dependency.
 Note: You should not use the `com.android.support` and
 `com.google.android.material` dependencies in your app at the same time.
 
-### 2. Compile your app with Android 9
+### 2. Compile your app with Android 10
 
 In order to use Material Components for Android, and the latest versions of the
-Support Libraries, you will have to update your app's `compileSdkVersion` to
-`28` and download the Android 9 using the SDK manager. For more information on
-Android 9 and its timeline, take a look at the
-[Program Overview](https://developer.android.com/preview/overview) page.
+Support Libraries, you will have to install Android Studio 3.5 or higher to
+build with Android 10, and update your app's `compileSdkVersion` to `29`.
 
 ### 3. Ensure you are using `AppCompatActivity`
 
@@ -88,7 +88,7 @@ Note: If you **can't** change your theme, you can do one of the following:
     [**Bridge Themes**](#bridge-themes) section for more details.
 *   Continue to inherit from an AppCompat theme and add some new theme
     attributes to your theme. See the
-    [**App Compat Themes**](#app-compat-themes) section for more details.
+    [**AppCompat Themes**](#appcompat-themes) section for more details.
 
 #### **Material Components themes**
 
@@ -121,10 +121,10 @@ Note: Using a Material Components theme enables a custom view inflater which
 replaces default components with their Material counterparts. Currently, this
 only replaces `<Button>` and `<AutoCompleteTextView>` XML components with
 [`<MaterialButton>`](components/Button.md) and
-[`<MaterialAutoCompleteTextView>`](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/textfield/MaterialAutoCompleteTextView.java),
+[`<MaterialAutoCompleteTextView>`](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/MaterialAutoCompleteTextView.java),
 respectively.
 
-#### **Bridge Themes** {#bridge-themes}
+#### **Bridge Themes**
 
 If you cannot change your theme to inherit from a Material Components theme, you
 can inherit from a Material Components **Bridge** theme.
@@ -148,7 +148,7 @@ Bridge themes inherit from AppCompat themes, but also define the new Material
 Components theme attributes for you. If you use a bridge theme, you can start
 using Material Design components without changing your app theme.
 
-#### **AppCompat Themes** {#app-compat-themes}
+#### **AppCompat Themes**
 
 You can also incrementally test new Material components without changing your
 app theme. This allows you to keep your existing layouts looking and behaving
@@ -251,6 +251,7 @@ out our [contributing guidelines](contributing.md) as well as an overview of the
 
 -   [Theming Guide](theming.md)
 -   [Contributing](contributing.md)
+-   [Using Snapshot Version](using-snapshot-version.md)
 -   [Building From Source](building-from-source.md)
 -   [Catalog App](catalog-app.md)
 -   [Class documentation](https://developer.android.com/reference/com/google/android/material/classes)

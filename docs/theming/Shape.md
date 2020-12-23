@@ -23,7 +23,6 @@ feel of your app.
 
 -   [Material Design guidelines:
     Shape](https://material.io/go/design-shape)
-    <!--{: .icon-list-item.icon-list-item--spec }-->
 
 ## How it works
 
@@ -252,10 +251,10 @@ Components that support shape theming have a `shapeAppearance` attribute, a
 *   [Chip](../components/Chip.md)
 *   [Date Picker](../components/Picker.md)
 *   [Dialog](../components/Dialog.md)
-*   [Extended Floating Action Button](../components/ExtendedFloatingActionButton.md)
+*   [Extended Floating Action Button](../components/FloatingActionButton.md?#extended-fabs)
 *   [Floating Action Button](../components/FloatingActionButton.md)
 *   [Button](../components/Button.md)
 *   [Toggle Button](../components/Button.md?#toggle-button)
-*   [Navigation View](../components/NavigationView.md)
+*   [Navigation Drawer](../components/NavigationDrawer.md)
 *   [Slider](../components/Slider.md)
 *   [Text Field](../components/TextField.md)

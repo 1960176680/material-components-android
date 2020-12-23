@@ -21,9 +21,6 @@ import io.material.catalog.R;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,9 +28,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StringRes;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.transition.MaterialContainerTransform;
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback;
+import com.google.android.material.transition.platform.MaterialContainerTransform;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
@@ -48,9 +48,6 @@ public abstract class DemoActivity extends AppCompatActivity implements HasAndro
 
   static final String EXTRA_TRANSITION_NAME = "EXTRA_TRANSITION_NAME";
 
-  private static final long DURATION_ENTER = 300;
-  private static final long DURATION_RETURN = 275;
-
   private Toolbar toolbar;
   private ViewGroup demoContainer;
 
@@ -58,13 +55,12 @@ public abstract class DemoActivity extends AppCompatActivity implements HasAndro
 
   @Override
   protected void onCreate(@Nullable Bundle bundle) {
-    String transitionName = getIntent().getStringExtra(EXTRA_TRANSITION_NAME);
-
-    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && transitionName != null) {
+    if (shouldSetUpContainerTransform()) {
+      String transitionName = getIntent().getStringExtra(EXTRA_TRANSITION_NAME);
       findViewById(android.R.id.content).setTransitionName(transitionName);
       setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-      getWindow().setSharedElementEnterTransition(buildContainerTransform(DURATION_ENTER));
-      getWindow().setSharedElementReturnTransition(buildContainerTransform(DURATION_RETURN));
+      getWindow().setSharedElementEnterTransition(buildContainerTransform(/* entering= */ true));
+      getWindow().setSharedElementReturnTransition(buildContainerTransform(/* entering= */ false));
     }
 
     safeInject();
@@ -103,6 +99,11 @@ public abstract class DemoActivity extends AppCompatActivity implements HasAndro
     return true;
   }
 
+  protected boolean shouldSetUpContainerTransform() {
+    return VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP
+        && getIntent().getStringExtra(EXTRA_TRANSITION_NAME) != null;
+  }
+
   @Override
   public AndroidInjector<Object> androidInjector() {
     return androidInjector;
@@ -117,9 +118,8 @@ public abstract class DemoActivity extends AppCompatActivity implements HasAndro
   }
 
   @RequiresApi(VERSION_CODES.LOLLIPOP)
-  private MaterialContainerTransform buildContainerTransform(long duration) {
-    MaterialContainerTransform transform = new MaterialContainerTransform();
-    transform.setDuration(duration);
+  private MaterialContainerTransform buildContainerTransform(boolean entering) {
+    MaterialContainerTransform transform = new MaterialContainerTransform(this, entering);
     transform.addTarget(android.R.id.content);
     transform.setContainerColor(
         MaterialColors.getColor(findViewById(android.R.id.content), R.attr.colorSurface));

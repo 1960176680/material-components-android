@@ -20,6 +20,8 @@
     <attr name="android:valueFrom" />
     <attr name="android:valueTo" />
     <attr name="android:stepSize" />
+    <!-- Whether the Slider is enabled. -->
+    <attr name="android:enabled"/>
     <!-- The color of the slider's halo. -->
     <attr name="haloColor" format="color" />
     <!-- The radius of the halo. -->
@@ -41,6 +43,10 @@
     <attr name="thumbElevation" format="dimension" />
     <!-- The radius of the thumb. -->
     <attr name="thumbRadius" format="dimension" />
+    <!-- The stroke color for the thumb. -->
+    <attr name="thumbStrokeColor" format="color" />
+    <!-- The stroke width for the thumb. -->
+    <attr name="thumbStrokeWidth" format="dimension" />
     <!-- The color of the slider's tick marks. Only used when the slider is in discrete mode. -->
     <attr name="tickColor" format="color" />
     <!-- The color of the slider's tick marks for the active portion of the track. Only used when
@@ -49,6 +55,8 @@
     <!-- The color of the slider's tick marks for the inactive portion of the track. Only used when
          the slider is in discrete mode. -->
     <attr name="tickColorInactive" format="color" />
+    <!-- Whether to show the tick marks. Only used when the slider is in discrete mode. -->
+    <attr name="tickVisible" format="boolean" />
     <!-- The color of the track. -->
     <attr name="trackColor" />
     <!-- The color of active portion of the track. -->
@@ -59,6 +67,15 @@
     <attr name="trackHeight" format="dimension" />
   </declare-styleable>
 
+  <declare-styleable name="RangeSlider">
+    <attr name="values" format="reference" />
+
+    <!-- If there is more than one thumb, and the slider is
+         not discrete the thumbs will be separated by this dimen -->
+    <attr name="minSeparation" format="dimension"/>
+  </declare-styleable>
+
   <!-- Style to use for Slider in this theme. -->
   <attr name="sliderStyle" format="reference" />
+
 </resources>

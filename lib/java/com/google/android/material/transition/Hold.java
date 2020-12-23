@@ -18,21 +18,18 @@ package com.google.android.material.transition;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import android.transition.TransitionValues;
-import android.transition.Visibility;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.TransitionValues;
+import androidx.transition.Visibility;
 
 /**
- * A {@link Visibility} {@link android.transition.Transition} that does nothing to the target views,
- * which can be useful for preserving a scene on screen during a Fragment transition.
+ * A {@link Visibility} {@link androidx.transition.Transition} that does nothing to the target
+ * views, which can be useful for preserving a scene on screen during a Fragment transition.
  */
-@RequiresApi(VERSION_CODES.LOLLIPOP)
-public class Hold extends Visibility {
+public final class Hold extends Visibility {
 
   @NonNull
   @Override

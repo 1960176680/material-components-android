@@ -34,13 +34,16 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
 import androidx.test.core.app.ApplicationProvider;
+import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonCheckedListener;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
+@LooperMode(LooperMode.Mode.LEGACY)
 /** Tests for {@link com.google.android.material.button.MaterialButtonToggleGroup}. */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)
@@ -50,6 +53,7 @@ public class MaterialButtonToggleGroupTest {
   private final Context context = ApplicationProvider.getApplicationContext();
 
   private MaterialButtonToggleGroup toggleGroup;
+  private int checkedChangeCallCount;
 
   private void themeApplicationContext() {
     context.setTheme(R.style.Theme_MaterialComponents_Light_NoActionBar_Bridge);
@@ -105,6 +109,20 @@ public class MaterialButtonToggleGroupTest {
     // Now middle and end child has rounded corners.
     assertShapeAppearance(middleChild.getShapeAppearanceModel(), CORNER_SIZE, 0, CORNER_SIZE, 0);
     assertShapeAppearance(lastChild.getShapeAppearanceModel(), 0, CORNER_SIZE, 0, CORNER_SIZE);
+  }
+
+  @Test
+  public void correctShapeAppearances_inToggle_whenOneVisibleButton() {
+    MaterialButton firstChild = (MaterialButton) toggleGroup.getChildAt(0);
+    MaterialButton middleChild = (MaterialButton) toggleGroup.getChildAt(1);
+    MaterialButton lastChild = (MaterialButton) toggleGroup.getChildAt(2);
+
+    firstChild.setVisibility(GONE);
+    middleChild.setVisibility(GONE);
+    toggleGroup.updateChildShapes();
+    // Last child has default shape appearance.
+    assertShapeAppearance(
+        lastChild.getShapeAppearanceModel(), CORNER_SIZE, CORNER_SIZE, CORNER_SIZE, CORNER_SIZE);
   }
 
   private static void assertShapeAppearance(
@@ -184,17 +202,62 @@ public class MaterialButtonToggleGroupTest {
 
   @Test
   public void singleSelection_withSelectionRequired_correctCheckedIdWithTwoTaps() {
+    int id = singleSelection_withSelectedRequired_setup();
+    View child = toggleGroup.findViewById(id);
+    child.performClick();
+    child.performClick();
+
+    // child button is selected
+    assertThat(toggleGroup.getCheckedButtonId()).isEqualTo(id);
+  }
+
+  private int singleSelection_withSelectedRequired_setup() {
     toggleGroup.setSingleSelection(true);
     toggleGroup.setSelectionRequired(true);
 
     View child = toggleGroup.getChildAt(1);
     int id = ViewCompat.generateViewId();
     child.setId(id);
-    
-    child.performClick();
-    child.performClick();
+    return id;
+  }
 
-    // child button is selected
-    assertThat(toggleGroup.getCheckedButtonId()).isEqualTo(id);
+  @Test
+  public void singleSelection_withSelectionRequired_callsListenerOnlyOnce() {
+    int id = singleSelection_withSelectedRequired_setup();
+    View child = toggleGroup.findViewById(id);
+    checkedChangeCallCount = 0;
+
+    OnButtonCheckedListener listener =
+        new OnButtonCheckedListener() {
+          @Override
+          public void onButtonChecked(
+              MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+            checkedChangeCallCount++;
+          }
+        };
+    toggleGroup.addOnButtonCheckedListener(listener);
+    child.performClick();
+    child.performClick();
+    assertThat(checkedChangeCallCount).isEqualTo(1);
+  }
+
+  @Test
+  public void singleSelection_withSelectionRequired_callsListenerOnFirstPressAndClick() {
+    int id = singleSelection_withSelectedRequired_setup();
+    View child = toggleGroup.findViewById(id);
+    checkedChangeCallCount = 0;
+
+    OnButtonCheckedListener listener =
+        new OnButtonCheckedListener() {
+          @Override
+          public void onButtonChecked(
+              MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+            checkedChangeCallCount++;
+          }
+        };
+    toggleGroup.addOnButtonCheckedListener(listener);
+    child.setPressed(true);
+    child.performClick();
+    assertThat(checkedChangeCallCount).isEqualTo(1);
   }
 }

@@ -12,21 +12,20 @@ path: /catalog/top-app-bars/
 [Top app bars](https://material.io/components/app-bars-top/#) display
 information and actions relating to the current screen.
 
-There are two types of top app bar:
+!["Top app bar on a screen"](assets/topappbar/topappbar_hero.png)
 
-1.  [Regular top app bar](#regular-top-app-bar)
-2.  [Contextual action bar](#contextual-action-bar)
+**Contents**
 
-![Top app bar examples of both regular and contextual action bar types. The
-regular top app bar shows a purple background with white icons and text. The
-contextual action bar shows a dark grey background with white icons and
-text.](assets/topappbar/topappbars_types.png)
+*   [Using top app bars](#using-top-app-bars)
+*   [Regular top app bar](#regular-top-app-bar)
+*   [Contextual action bar](#contextual-action-bar)
+*   [Theming](#theming-the-top-app-bar)
 
 ## Using top app bars
 
 Before you can use Material top app bars, you need to add a dependency to the
 Material Components for Android library. For more information, go to the
-[Getting started](/material-components/material-components-android/blob/master/docs/getting-started.md)
+[Getting started](https://github.com/material-components/material-components-android/tree/master/docs/getting-started.md)
 page.
 
 ### Making top app bars accessible
@@ -67,6 +66,14 @@ needs to be set in the menu:
 For images within promininent top app bars, set an `android:contentDescription`
 or use the `setContentDescription` method on the `ImageView`.
 
+## Types
+
+There are two types of top app bar: 1\.
+[Regular top app bar](#regular-top-app-bar), 2\.
+[Contextual action bar](#contextual-action-bar)
+
+![Regular and contextual app bars](assets/topappbar/topappbars_types.png)
+
 ## Regular top app bar
 
 The top app bar provides content and actions related to the current screen. It’s
@@ -91,7 +98,7 @@ API and source code:
 The following example shows a top app bar with a page title, a navigation icon,
 two action icons, and an overflow menu.
 
-![Regular app bar example with purple background, white icons and "page title".](assets/topappbar/topappbar_basic.png)
+![Top app bar with purple background, white icons, and page title](assets/topappbar/topappbar_basic.png)
 
 In the layout:
 
@@ -258,8 +265,8 @@ In the layout:
 The following example shows a prominent top app bar with a page title, a
 navigation icon, two action icons, and an overflow menu.
 
-![Prominent app bar example with purple background, white icons and "page
-title".](assets/topappbar/topappbar_prominent.png)
+![App bar with purple background and white icons with the page title on a
+newline below the icons](assets/topappbar/topappbar_prominent.png)
 
 In the layout:
 
@@ -310,8 +317,8 @@ In `res/values/type.xml`:
 The following example shows a prominent top app bar with an image background, a
 page title, a navigation icon, two action icons, and an overflow menu.
 
-![Prominent app bar example with red image background, white icons and "page
-title".](assets/topappbar/topappbar_prominent_image.png)
+![App bar with red background and white icons. The page title is on a newline
+below the icons](assets/topappbar/topappbar_prominent_image.png)
 
 In the layout:
 
@@ -416,10 +423,10 @@ In the layout:
 
 #### Navigation icon attributes
 
-&nbsp;                           | Attribute            | Related method(s)                          | Default value
--------------------------------- | -------------------- | ------------------------------------------ | -------------
-**`MaterialToolbar` icon**       | `app:navigationIcon` | `setNavigationIcon`<br>`getNavigationIcon` | `null`
-**`MaterialToolbar` icon color** | N/A                  | N/A                                        | `?attr/colorControlNormal` (as `Drawable` tint)
+&nbsp;                           | Attribute                 | Related method(s)                          | Default value
+-------------------------------- | ------------------------- | ------------------------------------------ | -------------
+**`MaterialToolbar` icon**       | `app:navigationIcon`      | `setNavigationIcon`<br>`getNavigationIcon` | `null`
+**`MaterialToolbar` icon color** | `app:navigationIconTint`  | `setNavigationIconTint`                    | `?attr/colorControlNormal` (as `Drawable` tint)
 
 #### Title attributes
 
@@ -491,7 +498,7 @@ Default style theme attribute: `?attr/toolbarStyle`
 ----------------- | ---------------------------------
 **Default style** | `Widget.Design.CollapsingToolbar`
 
-Default style theme attribute: N/A
+Default style theme attribute: collapsingToolbarLayoutStyle
 
 See the full list of
 [styles](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/appbar/res/values/styles.xml)

@@ -31,12 +31,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
-import androidx.annotation.StringRes;
-import androidx.annotation.StyleRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.util.Pair;
@@ -50,6 +44,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
 import com.google.android.material.dialog.InsetDialogOnTouchListener;
 import com.google.android.material.internal.CheckableImageButton;
 import com.google.android.material.resources.MaterialAttributes;
@@ -93,7 +93,7 @@ public final class MaterialDatePicker<S> extends DialogFragment {
    * Returns the UTC milliseconds representing the first moment in current month in local timezone.
    */
   public static long thisMonthInUtcMilliseconds() {
-    return Month.today().timeInMillis;
+    return Month.current().timeInMillis;
   }
 
   /**
@@ -331,12 +331,11 @@ public final class MaterialDatePicker<S> extends DialogFragment {
   }
 
   private void startPickerFragment() {
-    calendar =
-        MaterialCalendar.newInstance(
-            dateSelector, getThemeResId(requireContext()), calendarConstraints);
+    int themeResId = getThemeResId(requireContext());
+    calendar = MaterialCalendar.newInstance(dateSelector, themeResId, calendarConstraints);
     pickerFragment =
         headerToggleButton.isChecked()
-            ? MaterialTextInputPicker.newInstance(dateSelector, calendarConstraints)
+            ? MaterialTextInputPicker.newInstance(dateSelector, themeResId, calendarConstraints)
             : calendar;
     updateHeader();
 
@@ -349,11 +348,12 @@ public final class MaterialDatePicker<S> extends DialogFragment {
           @Override
           public void onSelectionChanged(S selection) {
             updateHeader();
-            if (dateSelector.isSelectionComplete()) {
-              confirmButton.setEnabled(true);
-            } else {
-              confirmButton.setEnabled(false);
-            }
+            confirmButton.setEnabled(dateSelector.isSelectionComplete());
+          }
+
+          @Override
+          public void onIncompleteSelectionChanged() {
+            confirmButton.setEnabled(false);
           }
         });
   }
@@ -371,6 +371,9 @@ public final class MaterialDatePicker<S> extends DialogFragment {
         new OnClickListener() {
           @Override
           public void onClick(View v) {
+            // Update confirm button in case in progress selection has been reset
+            confirmButton.setEnabled(dateSelector.isSelectionComplete());
+
             headerToggleButton.toggle();
             updateToggleContentDescription(headerToggleButton);
             startPickerFragment();
@@ -400,14 +403,22 @@ public final class MaterialDatePicker<S> extends DialogFragment {
   }
 
   static boolean isFullscreen(@NonNull Context context) {
+    return readMaterialCalendarStyleBoolean(context, android.R.attr.windowFullscreen);
+  }
+
+  static boolean isNestedScrollable(@NonNull Context context) {
+    return readMaterialCalendarStyleBoolean(context, R.attr.nestedScrollable);
+  }
+
+  static boolean readMaterialCalendarStyleBoolean(@NonNull Context context, int attributeResId) {
     int calendarStyle =
         MaterialAttributes.resolveOrThrow(
             context, R.attr.materialCalendarStyle, MaterialCalendar.class.getCanonicalName());
-    int[] attrs = {android.R.attr.windowFullscreen};
+    int[] attrs = {attributeResId};
     TypedArray a = context.obtainStyledAttributes(calendarStyle, attrs);
-    boolean fullscreen = a.getBoolean(0, false);
+    boolean attributeValue = a.getBoolean(0, false);
     a.recycle();
-    return fullscreen;
+    return attributeValue;
   }
 
   private static int getDialogPickerHeight(@NonNull Context context) {
@@ -430,7 +441,7 @@ public final class MaterialDatePicker<S> extends DialogFragment {
   private static int getPaddedPickerWidth(@NonNull Context context) {
     Resources resources = context.getResources();
     int padding = resources.getDimensionPixelOffset(R.dimen.mtrl_calendar_content_padding);
-    int daysInWeek = Month.today().daysInWeek;
+    int daysInWeek = Month.current().daysInWeek;
     int dayWidth = resources.getDimensionPixelSize(R.dimen.mtrl_calendar_day_width);
     int horizontalSpace =
         resources.getDimensionPixelOffset(R.dimen.mtrl_calendar_month_horizontal_padding);
@@ -535,7 +546,12 @@ public final class MaterialDatePicker<S> extends DialogFragment {
       this.dateSelector = dateSelector;
     }
 
-    /** Sets the Builder's selection manager to the provided {@link DateSelector}. */
+    /**
+     * Sets the Builder's selection manager to the provided {@link DateSelector}.
+     *
+     * @hide
+     */
+    @RestrictTo(LIBRARY_GROUP)
     @NonNull
     public static <S> Builder<S> customDatePicker(@NonNull DateSelector<S> dateSelector) {
       return new Builder<>(dateSelector);
@@ -617,10 +633,35 @@ public final class MaterialDatePicker<S> extends DialogFragment {
       if (titleTextResId == 0) {
         titleTextResId = dateSelector.getDefaultTitleResId();
       }
+
       if (selection != null) {
         dateSelector.setSelection(selection);
       }
+
+      if (calendarConstraints.getOpenAt() == null) {
+        calendarConstraints.setOpenAt(createDefaultOpenAt());
+      }
+
       return MaterialDatePicker.newInstance(this);
+    }
+
+    private Month createDefaultOpenAt() {
+      long start = calendarConstraints.getStart().timeInMillis;
+      long end = calendarConstraints.getEnd().timeInMillis;
+
+      if (!dateSelector.getSelectedDays().isEmpty()) {
+        // Set the month to the first selected month in the selection
+        long firstSelectedDay = dateSelector.getSelectedDays().iterator().next();
+
+        // Make sure the selection is in a valid month we can open to; otherwise use default openAt
+        if (firstSelectedDay >= start && firstSelectedDay <= end) {
+          return Month.create(firstSelectedDay);
+        }
+      }
+
+      long today = MaterialDatePicker.thisMonthInUtcMilliseconds();
+      long openAt = start <= today && today <= end ? today : start;
+      return Month.create(openAt);
     }
   }
 }

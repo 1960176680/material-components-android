@@ -7,11 +7,11 @@ iconId: picker
 path: /catalog/picker/
 -->
 
-## Date Pickers
+# Date Pickers
 
 Date Pickers allow users to select a single date or date range.
 
-## Design
+**Design**
 
 [Material Design: Pickers](https://material.io/design/components/pickers.html)
 
@@ -75,7 +75,3 @@ The
 [Picker Package](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/datepicker)
 contains the code for this component, with the main entry point being
 [MaterialDatePicker](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/datepicker/MaterialDatePicker.java).
-
-## Time Pickers
-
-Time Pickers are currently not under development.

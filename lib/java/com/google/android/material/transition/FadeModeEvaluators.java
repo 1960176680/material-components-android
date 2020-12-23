@@ -22,11 +22,8 @@ import static com.google.android.material.transition.MaterialContainerTransform.
 import static com.google.android.material.transition.MaterialContainerTransform.FADE_MODE_THROUGH;
 import static com.google.android.material.transition.TransitionUtils.lerp;
 
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.RequiresApi;
 import com.google.android.material.transition.MaterialContainerTransform.FadeMode;
 
-@RequiresApi(VERSION_CODES.LOLLIPOP)
 class FadeModeEvaluators {
 
   private static final FadeModeEvaluator IN =

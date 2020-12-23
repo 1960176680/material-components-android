@@ -18,21 +18,18 @@ package com.google.android.material.transition;
 
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.os.Build.VERSION_CODES;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import android.transition.PathMotion;
+import androidx.transition.PathMotion;
 
 /**
  * A Material {@link PathMotion} that results in a more dramatic curve than {@link
- * android.transition.ArcMotion}.
+ * androidx.transition.ArcMotion}.
  *
  * <p>Use MaterialArcMotion in conjunction with {@link MaterialContainerTransform} via {@link
  * MaterialContainerTransform#setPathMotion(PathMotion)} to have the container move along a curved
  * path from its start position to its end position.
  */
-@RequiresApi(VERSION_CODES.LOLLIPOP)
-public class MaterialArcMotion extends PathMotion {
+public final class MaterialArcMotion extends PathMotion {
 
   @NonNull
   @Override

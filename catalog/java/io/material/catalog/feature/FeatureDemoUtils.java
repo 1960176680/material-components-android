@@ -24,11 +24,11 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
+import androidx.annotation.Nullable;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.transition.Hold;
 import com.google.android.material.transition.MaterialContainerTransform;
@@ -66,13 +66,21 @@ public abstract class FeatureDemoUtils {
         && sharedElement != null
         && sharedElementName != null) {
       Fragment currentFragment = getCurrentFragment(activity);
-      currentFragment.setExitTransition(new Hold());
 
-      MaterialContainerTransform transform = new MaterialContainerTransform();
+      Context context = currentFragment.requireContext();
+      MaterialContainerTransform transform =
+          new MaterialContainerTransform(context, /* entering= */ true);
       transform.setContainerColor(MaterialColors.getColor(sharedElement, R.attr.colorSurface));
       transform.setFadeMode(MaterialContainerTransform.FADE_MODE_THROUGH);
       fragment.setSharedElementEnterTransition(transform);
       transaction.addSharedElement(sharedElement, sharedElementName);
+
+      Hold hold = new Hold();
+      // Add root view as target for the Hold so that the entire view hierarchy is held in place as
+      // one instead of each child view individually. Helps keep shadows during the transition.
+      hold.addTarget(currentFragment.getView());
+      hold.setDuration(transform.getDuration());
+      currentFragment.setExitTransition(hold);
 
       if (fragment.getArguments() == null) {
         Bundle args = new Bundle();

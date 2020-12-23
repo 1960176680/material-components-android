@@ -22,11 +22,8 @@ import static com.google.android.material.transition.MaterialContainerTransform.
 import static com.google.android.material.transition.TransitionUtils.lerp;
 
 import android.graphics.RectF;
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.RequiresApi;
 import com.google.android.material.transition.MaterialContainerTransform.FitMode;
 
-@RequiresApi(VERSION_CODES.LOLLIPOP)
 class FitModeEvaluators {
 
   private static final FitModeEvaluator WIDTH =
@@ -42,7 +39,13 @@ class FitModeEvaluators {
             float endHeight) {
           // Use same width for start/end views; calculate heights using respective aspect ratios.
           float currentWidth =
-              lerp(startWidth, endWidth, scaleStartFraction, scaleEndFraction, progress);
+              lerp(
+                  startWidth,
+                  endWidth,
+                  scaleStartFraction,
+                  scaleEndFraction,
+                  progress,
+                  /* allowOvershoot= */ true);
           float startScale = currentWidth / startWidth;
           float endScale = currentWidth / endWidth;
           float currentStartHeight = startHeight * startScale;
@@ -82,7 +85,13 @@ class FitModeEvaluators {
             float endHeight) {
           // Use same height for start/end views; calculate widths using respective aspect ratios.
           float currentHeight =
-              lerp(startHeight, endHeight, scaleStartFraction, scaleEndFraction, progress);
+              lerp(
+                  startHeight,
+                  endHeight,
+                  scaleStartFraction,
+                  scaleEndFraction,
+                  progress,
+                  /* allowOvershoot= */ true);
           float startScale = currentHeight / startHeight;
           float endScale = currentHeight / endHeight;
           float currentStartWidth = startWidth * startScale;

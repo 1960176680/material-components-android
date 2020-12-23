@@ -12,22 +12,22 @@ path: /catalog/dialogs/
 [Dialogs](https://material.io/components/dialogs/) inform users about a task and
 can contain critical information, require decisions, or involve multiple tasks.
 
-There are four types of dialogs:
+!["Dialog to confirm settings centered in a screen"](assets/dialogs/dialogs_hero.png)
 
-1.  [Alert dialog](#alert-dialog)
-2.  [Simple dialog](#simple-dialog)
-3.  [Confirmation dialog](#confirmation-dialog)
-4.  [Full-screen dialog](#full-screen-dialog)
+**Contents**
 
-<br>
-
-![Examples of the four types of dialogs.](assets/dialogs/dialogs_types.png)
+*   [Using dialogs](#using-dialogs)
+*   [Alert dialog](#alert-dialog)
+*   [Simple dialog](#simple-dialog)
+*   [Confirmation dialog](#confirmation-dialog)
+*   [Full-screen dialog](#full-screen-dialog)
+*   [Theming](#theming-dialogs)
 
 ## Using dialogs
 
 Before you can use Material dialogs, you need to add a dependency to the
 Material Components for Android library. For more information, go to the
-[Getting started](/material-components/material-components-android/blob/master/docs/getting-started.md)
+[Getting started](https://github.com/material-components/material-components-android/tree/master/docs/getting-started.md)
 page.
 
 ```kt
@@ -42,6 +42,15 @@ The contents within a dialog should follow their own accessibility guidelines,
 such as an icon on a title having a content description via the
 `android:contentDescription` attribute set in the
 `MaterialAlertDialog.MaterialComponents.Title.Icon` style or descendant.
+
+## Types
+
+There are four types of dialogs: 1\. [Alert dialog](#alert-dialog), 2\.
+[Simple dialog](#simple-dialog), 3\.
+[Confirmation dialog](#confirmation-dialog), 4\.
+[Full-screen dialog](#full-screen-dialog)
+
+![Examples of the four types of dialogs.](assets/dialogs/dialogs_types.png)
 
 ## Dialogs
 
@@ -66,8 +75,7 @@ Alert dialogs interrupt users with urgent information, details, or actions.
 
 The following example shows an alert dialog.
 
-!["Alert dialog with a title, text, and cancel, decline and accept buttons in
-purple"](assets/dialogs/dialogs_alert.png)
+!["Dialog with title, and text and purple buttons to cancel, decline or accept"](assets/dialogs/dialogs_alert.png)
 
 In code:
 
@@ -98,7 +106,7 @@ way.
 
 The following example shows a simple dialog.
 
-!["Simple dialog with a title, a list of accounts, and a add account button"](assets/dialogs/dialogs_simple.png)
+!["Dialog with title and three list items"](assets/dialogs/dialogs_simple.png)
 
 In code:
 
@@ -125,8 +133,8 @@ final selection upon tapping “OK.”
 
 The following example shows a confirmation dialog.
 
-!["Confirmation dialog with a title, a list of options, and a cancel and OK
-buttons"](assets/dialogs/dialogs_confirmation.png)
+!["Dialog with title, three items with radio buttons, and purple text buttons to
+cancel and accept"](assets/dialogs/dialogs_confirmation.png)
 
 ```kt
 val singleItems = arrayOf("Item 1", "Item 2", "Item 3")
@@ -264,7 +272,7 @@ Default theme overlay attribute: `?attr/materialAlertDialogTheme`
 &nbsp;                    | **Theme attribute**                       | **Default value**
 ------------------------- | ----------------------------------------- | -----------------
 **Default style**         | `?attr/alertDialogStyle`                  | `@style/MaterialAlertDialog.MaterialComponents`
-**Title text style**      | `?attr/materialAlertDialogTitleTextStyle` | `@style/MaterialAlertDialog.MaterialComponents.Title.Icon`
+**Title text style**      | `?attr/materialAlertDialogTitleTextStyle` | `@style/MaterialAlertDialog.MaterialComponents.Title.Text`
 **Supporting text style** | `?attr/materialAlertDialogBodyTextStyle`  | `@style/MaterialAlertDialog.MaterialComponents.Body.Text`
 
 See full list of
@@ -273,7 +281,7 @@ See full list of
 and
 [theme overlays](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/dialog/res/values/themes.xml).
 
-## Dialog theming
+## Theming dialogs
 
 A dialog supports
 [Material Theming](https://material.io/components/dialogs/#theming) and can be
@@ -289,7 +297,7 @@ API and source code:
 
 The following example shows a dialog with Material Theming.
 
-![Dialog theming example in Shrine theme](assets/dialogs/dialogs_theming.png)
+![Dialog with title and text buttons in brown and selected radio button in pink](assets/dialogs/dialogs_theming.png)
 
 #### Implementing dialog theming
 

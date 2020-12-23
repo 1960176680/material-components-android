@@ -23,14 +23,6 @@ import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wra
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.BoolRes;
-import androidx.annotation.DimenRes;
-import androidx.annotation.Dimension;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionInfoCompat;
@@ -39,6 +31,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.CompoundButton;
+import androidx.annotation.BoolRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.material.internal.FlowLayout;
 import com.google.android.material.internal.ThemeEnforcement;
 import java.util.ArrayList;
@@ -123,11 +121,7 @@ public class ChipGroup extends FlowLayout {
 
     TypedArray a =
         ThemeEnforcement.obtainStyledAttributes(
-            context,
-            attrs,
-            R.styleable.ChipGroup,
-            defStyleAttr,
-            DEF_STYLE_RES);
+            context, attrs, R.styleable.ChipGroup, defStyleAttr, DEF_STYLE_RES);
 
     int chipSpacing = a.getDimensionPixelOffset(R.styleable.ChipGroup_chipSpacing, 0);
     setChipSpacingHorizontal(
@@ -298,8 +292,8 @@ public class ChipGroup extends FlowLayout {
   }
 
   /**
-   * Returns the identifiers of the selected {@link Chip}s in this group. Upon empty
-   * selection, the returned value is an empty list.
+   * Returns the identifiers of the selected {@link Chip}s in this group. Upon empty selection, the
+   * returned value is an empty list.
    *
    * @return The unique IDs of the selected {@link Chip}s in this group. When in {@link
    *     #isSingleSelection() single selection mode}, returns a list with a single ID. When no
@@ -570,14 +564,14 @@ public class ChipGroup extends FlowLayout {
         int id = child.getId();
         // generates an id if it's missing
         if (id == View.NO_ID) {
-          if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-            id = View.generateViewId();
-          } else {
-            id = child.hashCode();
-          }
+          id = ViewCompat.generateViewId();
           child.setId(id);
         }
-        ((Chip) child).setOnCheckedChangeListenerInternal(checkedStateTracker);
+        Chip chip = ((Chip) child);
+        if (chip.isChecked()) {
+          ((ChipGroup) parent).check(chip.getId());
+        }
+        chip.setOnCheckedChangeListenerInternal(checkedStateTracker);
       }
 
       if (onHierarchyChangeListener != null) {

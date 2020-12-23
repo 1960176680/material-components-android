@@ -18,15 +18,15 @@ package com.google.android.material.textfield;
 
 import com.google.android.material.R;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import androidx.annotation.NonNull;
+import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.textfield.TextInputLayout.OnEditTextAttachedListener;
 import com.google.android.material.textfield.TextInputLayout.OnEndIconChangedListener;
 
@@ -34,19 +34,13 @@ import com.google.android.material.textfield.TextInputLayout.OnEndIconChangedLis
 class PasswordToggleEndIconDelegate extends EndIconDelegate {
 
   private final TextWatcher textWatcher =
-      new TextWatcher() {
+      new TextWatcherAdapter() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
           // Make sure the password toggle state always matches the EditText's transformation
           // method.
           endIconView.setChecked(!hasPasswordTransformation());
         }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {}
       };
 
   private final OnEditTextAttachedListener onEditTextAttachedListener =
@@ -55,6 +49,7 @@ class PasswordToggleEndIconDelegate extends EndIconDelegate {
         public void onEditTextAttached(@NonNull TextInputLayout textInputLayout) {
           EditText editText = textInputLayout.getEditText();
           textInputLayout.setEndIconVisible(true);
+          textInputLayout.setEndIconCheckable(true);
           endIconView.setChecked(!hasPasswordTransformation());
           // Make sure there's always only one password toggle text watcher added
           editText.removeTextChangedListener(textWatcher);
@@ -65,11 +60,19 @@ class PasswordToggleEndIconDelegate extends EndIconDelegate {
       new OnEndIconChangedListener() {
         @Override
         public void onEndIconChanged(@NonNull TextInputLayout textInputLayout, int previousIcon) {
-          EditText editText = textInputLayout.getEditText();
+          final EditText editText = textInputLayout.getEditText();
           if (editText != null && previousIcon == TextInputLayout.END_ICON_PASSWORD_TOGGLE) {
             // If the end icon was the password toggle add it back the PasswordTransformation
-            // in case it might have been removed to make the password visible,
+            // in case it might have been removed to make the password visible.
             editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            // Remove any listeners set on the edit text.
+            editText.post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    editText.removeTextChangedListener(textWatcher);
+                  }
+                });
           }
         }
       };
@@ -103,6 +106,8 @@ class PasswordToggleEndIconDelegate extends EndIconDelegate {
             if (selection >= 0) {
               editText.setSelection(selection);
             }
+
+            textInputLayout.refreshEndIconDrawableState();
           }
         });
     textInputLayout.addOnEditTextAttachedListener(onEditTextAttachedListener);

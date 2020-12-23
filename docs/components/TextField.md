@@ -12,22 +12,20 @@ path: /catalog/text-fields/
 [Text fields](https://material.io/components/text-fields) let users enter and
 edit text.
 
-There are two types of text fields:
+!["Text fields on a screen"](assets/textfields/textfields_hero.png)
 
-1.  [Filled text field](#filled-text-field)
-2.  [Outlined text field](#outlined-text-field)
+**Contents**
 
-!["Text field examples of both filled and outlined types, and each type showing
-both inactive and focused states. The filled text fields show a gray background
-and a darker gray activation indicator that is purple when focused. The outlined
-text fields show a clear background and an outline that is purple when
-focused"](assets/textfields/text-field-generic.png)
+*   [Using text fields](#using-text-fields)
+*   [Filled text field](#filled-text-field)
+*   [Outlined text field](#outlined-text-field)
+*   [Theming](#theming-text-fields)
 
 ## Using text fields
 
 Before you can use Material text fields, you need to add a dependency to the
 Material Components for Android library. For more information, go to the
-[Getting started](/material-components/material-components-android/blob/master/docs/getting-started.md)
+[Getting started](https://github.com/material-components/material-components-android/tree/master/docs/getting-started.md)
 page.
 
 ```xml
@@ -52,6 +50,38 @@ and allows `TextInputLayout` greater control over the visual aspects of the
 input text. If an `EditText` is being used, make sure to set its
 `android:background` to `@null` so that `TextInputLayout` can set the proper
 background on it._
+
+### Making text fields accessible
+
+Android's text field component APIs support both label text and helper text for
+informing the user as to what information is requested for a text field. While
+optional, their use is strongly encouraged.
+
+#### Content description
+
+When using **custom icons**, you should set a content description on them so
+that screen readers like TalkBack are able to announce their purpose or action,
+if any.
+
+For the leading icon, that can be achieved via the
+`app:startIconContentDescription` attribute or `setStartIconContentDescription`
+method. For the trailing icon, that can be achieved via the
+`app:endIconContentDescription` attribute or `setEndIconContentDescription`
+method.
+
+When setting an **error message** that contains special characters that screen
+readers or other accessibility systems are not able to read, you should set a
+content description via the `app:errorContentDescription` attribute or
+`setErrorContentDescription` method. That way, when the error needs to be
+announced, it will announce the content description instead.
+
+#### Custom `EditText`
+
+If you are using a custom `EditText` as `TextInputLayout`'s child and your text
+field requires different accessibility support than the one offered by
+`TextInputLayout`, you can set a `TextInputLayout.AccessibilityDelegate` via the
+`setTextInputAccessibilityDelegate` method. This method should be used in place
+of providing an `AccessibilityDelegate` directly on the `EditText`.
 
 ### Adding a leading icon to a text field
 
@@ -280,37 +310,28 @@ _**Note:** Non-null error text will replace any existing helper text._
 </com.google.android.material.textfield.TextInputLayout>
 ```
 
-### Making text fields accessible
+### Using text fields programmatically
 
-Android's text field component APIs support both label text and helper text for
-informing the user as to what information is requested for a text field. While
-optional, their use is strongly encouraged.
+If you construct the `TextInputEditText` child of a `TextInputLayout`
+programmatically, you should use `TextInputLayout`'s context to create the view.
+This will allow `TextInputLayout` to pass along the appropriate styling to the
+edit text.
 
-#### Content description
+```kt
+val textInputLayout = TextInputLayout(context)
+val editText = TextInputEditText(textInputLayout.context)
+```
 
-When using **custom icons**, you should set a content description on them so
-that screen readers like TalkBack are able to announce their purpose or action,
-if any.
+## Types
 
-For the leading icon, that can be achieved via the
-`app:startIconContentDescription` attribute or `setStartIconContentDescription`
-method. For the trailing icon, that can be achieved via the
-`app:endIconContentDescription` attribute or `setEndIconContentDescription`
-method.
+There are two types of text fields: 1\. [Filled text field](#filled-text-field),
+2\. [Outlined text field](#outlined-text-field)
 
-When setting an **error message** that contains special characters that screen
-readers or other accessibility systems are not able to read, you should set a
-content description via the `app:errorContentDescription` attribute or
-`setErrorContentDescription` method. That way, when the error needs to be
-announced, it will announce the content description instead.
-
-#### Custom `EditText`
-
-If you are using a custom `EditText` as `TextInputLayout`'s child and your text
-field requires different accessibility support than the one offered by
-`TextInputLayout`, you can set a `TextInputLayout.AccessibilityDelegate` via the
-`setTextInputAccessibilityDelegate` method. This method should be used in place
-of providing an `AccessibilityDelegate` directly on the `EditText`.
+!["Text field examples of both filled and outlined types, and each type showing
+both inactive and focused states. The filled text fields show a grey background
+and a darker grey activation indicator that is purple when focused. The outlined
+text fields show a clear background and an outline that is purple when
+focused"](assets/textfields/text-field-generic.png)
 
 ## Filled text field
 
@@ -404,12 +425,14 @@ be set on the `TextInputEditText`)._
 
 #### Label attributes
 
-&nbsp;                         | Attribute                | Related method(s)                                       | Default value
------------------------------- | ------------------------ | ------------------------------------------------------- | -------------
-**Text**                       | `android:hint`           | `setHint`<br/>`getHint`                                 | `null`
-**Color**                      | `android:textColorHint`  | `setDefaultHintTextColor`<br/>`getDefaultHintTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
-**Collapsed (floating) color** | `app:hintTextColor`      | `setHintTextColor`<br/>`getHintTextColor`               | `?attr/colorPrimary`
-**Typography**                 | `app:hintTextAppearance` | `setHintTextAppearance`                                 | `?attr/textAppearanceCaption`
+&nbsp;                         | Attribute                  | Related method(s)                                       | Default value
+------------------------------ | -------------------------- | ------------------------------------------------------- | -------------
+**Text**                       | `android:hint`             | `setHint`<br/>`getHint`                                 | `null`
+**Color**                      | `android:textColorHint`    | `setDefaultHintTextColor`<br/>`getDefaultHintTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
+**Collapsed (floating) color** | `app:hintTextColor`        | `setHintTextColor`<br/>`getHintTextColor`               | `?attr/colorPrimary`
+**Typography**                 | `app:hintTextAppearance`   | `setHintTextAppearance`                                 | `?attr/textAppearanceCaption`
+**Animation**                  | `app:hintAnimationEnabled` | `setHintAnimationEnabled`<br/>`isHintAnimationEnabled`  | `true`
+**Expanded enabled**           | `app:expandedHintEnabled`  | `setExpandedHintEnabled`<br/>`isExpandedHintEnabled`    | `true`
 
 **Note:** The `android:hint` should always be set on the `TextInputLayout`
 instead of on the `EditText` in order to avoid unintended behaviors.
@@ -468,10 +491,10 @@ _**Note:** The input text attributes should be set on the `TextInputEditText`._
 &nbsp;                | Attribute                  | Related method(s)                             | Default value
 --------------------- | -------------------------- | --------------------------------------------- | -------------
 **Prefix**            | `app:prefixText`           | `setPrefixText`<br/>`getPrefixText`           | `null`
-**Prefix color**      | `app:prefixTextColor`      | `setPrefixTextColor`<br/>`getPrefixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
+**Prefix color**      | `app:prefixTextColor`      | `setPrefixTextColor`<br/>`getPrefixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
 **Prefix typography** | `app:prefixTextAppearance` | `setPrefixTextAppearance`                     | `?attr/textAppearanceSubtitle1`
 **Suffix**            | `app:suffixText`           | `setSuffixText`<br/>`getSuffixText`           | `null`
-**Suffix color**      | `app:suffixTextColor`      | `setSuffixTextColor`<br/>`getSuffixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
+**Suffix color**      | `app:suffixTextColor`      | `setSuffixTextColor`<br/>`getSuffixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
 **Suffix typography** | `app:suffixTextAppearance` | `setSuffixTextAppearance`                     | `?attr/textAppearanceSubtitle1`
 
 #### Styles
@@ -639,10 +662,10 @@ _**Note:** The input text attributes should be set on the `TextInputEditText`._
 &nbsp;                | Attribute                  | Related method(s)                             | Default value
 --------------------- | -------------------------- | --------------------------------------------- | -------------
 **Prefix**            | `app:prefixText`           | `setPrefixText`<br/>`getPrefixText`           | `null`
-**Prefix color**      | `app:prefixTextColor`      | `setPrefixTextColor`<br/>`getPrefixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
+**Prefix color**      | `app:prefixTextColor`      | `setPrefixTextColor`<br/>`getPrefixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
 **Prefix typography** | `app:prefixTextAppearance` | `setPrefixTextAppearance`                     | `?attr/textAppearanceSubtitle1`
 **Suffix**            | `app:suffixText`           | `setSuffixText`<br/>`getSuffixText`           | `null`
-**Suffix color**      | `app:suffixTextColor`      | `setSuffixTextColor`<br/>`getSuffixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
+**Suffix color**      | `app:suffixTextColor`      | `setSuffixTextColor`<br/>`getSuffixTextColor` | `?attr/colorOnSurface` at 60% opacity (see all [states](https://github.com/material-components/material-components-android/tree/master/lib/java/com/google/android/material/textfield/res/color/mtrl_indicator_text_color.xml))
 **Suffix typography** | `app:suffixTextAppearance` | `setSuffixTextAppearance`                     | `?attr/textAppearanceSubtitle1`
 
 #### Styles

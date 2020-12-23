@@ -25,18 +25,16 @@ Android system UI and apps running on the device.
 ## Design & API Documentation
 
 -   [Material Design guidelines: Dark Theme][dark-theme-mdc-spec]
-    <!--{: .icon-list-item.icon-list-item--spec }-->
 -   [Android Q Dark Theme Documentation][dark-theme-dac-docs]
-    <!--{: .icon-list-item.icon-list-item--spec }-->
 -   [AppCompat DayNight Documentation][daynight-appcompat-docs]
-    <!--{: .icon-list-item.icon-list-item--spec }-->
 
 ### Setup
 
 In order to support the dark theme functionality in Android Q, make sure you are
-depending on the [latest][maven-repo-mdc] `1.1.0` alpha version of the Material
-Android library, and update your app theme to inherit from
-`Theme.MaterialComponents.DayNight` (or one of its descendants). E.g.:
+depending on the `1.1.0` stable version of the
+[Material Android library][maven-repo-mdc] or later, and update your app theme
+to inherit from `Theme.MaterialComponents.DayNight` (or one of its descendants).
+E.g.:
 
 ##### res/values/themes.xml
 
@@ -89,7 +87,7 @@ colors and light foreground colors. The Material `Dark` themes make use of the
 [Material Color System](Color.md), in order to provide default dark theme values
 for neutral palette colors such as `colorBackground` and `colorSurface`.
 
-The baseline Material `Dark` theme background and surface colors are dark gray
+The baseline Material `Dark` theme background and surface colors are dark grey
 instead of black, which increases visibility for shadows and also reduces eye
 strain for light text.
 
@@ -156,13 +154,13 @@ in dark theme, because they use `colorSurface` and can be elevated:
 
 *   [Top App Bar](../components/TopAppBar.md)
 *   [Bottom App Bar](../components/BottomAppBar.md)
-*   [Bottom Navigation](../components/BottomNavigationView.md)
-*   [Tabs](../components/TabLayout.md)
+*   [Bottom Navigation](../components/BottomNavigation.md)
+*   [Tabs](../components/Tabs.md)
 *   [Card](../components/Card.md)
 *   [Dialog](../components/Dialog.md)
 *   [Menu](../components/Menu.md)
 *   [Bottom Sheet](../components/BottomSheetBehavior.md)
-*   [Navigation Drawer](../components/NavigationView.md)
+*   [Navigation Drawer](../components/NavigationDrawer.md)
 *   [Switch](../components/Switch.md)
 
 #### Theme Attributes
@@ -249,4 +247,4 @@ views that support elevation overlays.
 [dark-theme-mdc-spec-custom-application]: https://material.io/design/color/dark-theme.html#custom-application
 [dark-theme-dac-docs]: https://developer.android.com/preview/features/darktheme
 [daynight-appcompat-docs]: https://medium.com/androiddevelopers/appcompat-v23-2-daynight-d10f90c83e94
-[maven-repo-mdc]: https://mvnrepository.com/artifact/com.google.android.material/material
+[maven-repo-mdc]: https://maven.google.com/web/index.html#com.google.android.material:material

@@ -18,12 +18,9 @@ package io.material.catalog.transition.hero;
 
 import io.material.catalog.R;
 
-import android.annotation.TargetApi;
-import android.os.Build.VERSION_CODES;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,19 +31,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.TransitionManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.transition.MaterialArcMotion;
 import com.google.android.material.transition.MaterialContainerTransform;
+import dagger.android.support.DaggerFragment;
 import io.material.catalog.transition.hero.MusicData.Album;
 import io.material.catalog.transition.hero.MusicData.Track;
-import io.material.catalog.transition.hero.TransitionMusicAlbumDemoFragment.TrackAdapter.TrackViewHolder;
 
 /** A Fragment that displays an album's details. */
-@TargetApi(VERSION_CODES.LOLLIPOP)
-public class TransitionMusicAlbumDemoFragment extends Fragment {
+public class TransitionMusicAlbumDemoFragment extends DaggerFragment {
 
   public static final String TAG = "TransitionMusicAlbumDemoFragment";
   private static final String ALBUM_ID_KEY = "album_id_key";
+
+  private ViewGroup container;
 
   public static TransitionMusicAlbumDemoFragment newInstance(long albumId) {
     TransitionMusicAlbumDemoFragment fragment = new TransitionMusicAlbumDemoFragment();
@@ -54,12 +56,6 @@ public class TransitionMusicAlbumDemoFragment extends Fragment {
     bundle.putLong(ALBUM_ID_KEY, albumId);
     fragment.setArguments(bundle);
     return fragment;
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle bundle) {
-    super.onCreate(bundle);
-    setUpTransitions();
   }
 
   @Nullable
@@ -73,7 +69,7 @@ public class TransitionMusicAlbumDemoFragment extends Fragment {
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
-    View container = view.findViewById(R.id.container);
+    container = view.findViewById(R.id.container);
     Toolbar toolbar = view.findViewById(R.id.toolbar);
     AppBarLayout appBarLayout = view.findViewById(R.id.app_bar_layout);
     FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -81,6 +77,8 @@ public class TransitionMusicAlbumDemoFragment extends Fragment {
     TextView albumTitle = view.findViewById(R.id.album_title);
     TextView albumArtist = view.findViewById(R.id.album_artist);
     RecyclerView songRecyclerView = view.findViewById(R.id.song_recycler_view);
+
+    View musicPlayerContainer = view.findViewById(R.id.music_player_container);
 
     long albumId = getArguments().getLong(ALBUM_ID_KEY, 0L);
     Album album = MusicData.getAlbumById(albumId);
@@ -95,15 +93,16 @@ public class TransitionMusicAlbumDemoFragment extends Fragment {
               (float) Math.abs(verticalOffset) / (float) appBarLayout1.getTotalScrollRange();
           if (verticalOffsetPercentage > 0.2F && fab.isOrWillBeShown()) {
             fab.hide();
-          } else if (verticalOffsetPercentage <= 0.2F && fab.isOrWillBeHidden()) {
+          } else if (verticalOffsetPercentage <= 0.2F
+              && fab.isOrWillBeHidden()
+              && musicPlayerContainer.getVisibility() != View.VISIBLE) {
             fab.show();
           }
         });
 
     // Set up toolbar
     ViewCompat.setElevation(toolbar, 0F);
-    toolbar.setNavigationOnClickListener(
-        v -> getActivity().onBackPressed());
+    toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
     // Set up album info area
     albumImage.setImageResource(album.cover);
@@ -115,11 +114,40 @@ public class TransitionMusicAlbumDemoFragment extends Fragment {
     TrackAdapter adapter = new TrackAdapter();
     songRecyclerView.setAdapter(adapter);
     adapter.submitList(album.tracks);
+
+    // Set up music player transitions
+    Context context = requireContext();
+    MaterialContainerTransform musicPlayerEnterTransform =
+        createMusicPlayerTransform(context, /* entering= */ true, fab, musicPlayerContainer);
+
+    fab.setOnClickListener(
+        v -> {
+          TransitionManager.beginDelayedTransition(container, musicPlayerEnterTransform);
+          fab.setVisibility(View.GONE);
+          musicPlayerContainer.setVisibility(View.VISIBLE);
+        });
+
+    MaterialContainerTransform musicPlayerExitTransform =
+        createMusicPlayerTransform(context, /* entering= */ false, musicPlayerContainer, fab);
+
+    musicPlayerContainer.setOnClickListener(
+        v -> {
+          TransitionManager.beginDelayedTransition(container, musicPlayerExitTransform);
+          musicPlayerContainer.setVisibility(View.GONE);
+          fab.setVisibility(View.VISIBLE);
+        });
   }
 
-  private void setUpTransitions() {
-    MaterialContainerTransform transform = new MaterialContainerTransform();
-    setSharedElementEnterTransition(transform);
+  private static MaterialContainerTransform createMusicPlayerTransform(
+      Context context, boolean entering, View startView, View endView) {
+    MaterialContainerTransform musicPlayerTransform =
+        new MaterialContainerTransform(context, entering);
+    musicPlayerTransform.setPathMotion(new MaterialArcMotion());
+    musicPlayerTransform.setScrimColor(Color.TRANSPARENT);
+    musicPlayerTransform.setStartView(startView);
+    musicPlayerTransform.setEndView(endView);
+    musicPlayerTransform.addTarget(endView);
+    return musicPlayerTransform;
   }
 
   /** An adapter to hold an albums list of tracks. */
